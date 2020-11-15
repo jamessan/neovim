@@ -9,5 +9,4 @@ jobs:
       - uses: nebularg/actions-luacheck@v1
         with:
           args: '-q --formatter plain'
-          config: '.luacheckrc'
           annotate: 'warning'
