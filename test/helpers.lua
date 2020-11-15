@@ -5,6 +5,7 @@ local luv = require('luv')
 local lfs = require('lfs')
 local relpath = require('pl.path').relpath
 local Paths = require('test.config.paths')
+local Paths = require('test.config.paths')
 
 assert:set_parameter('TableFormatLevel', 100)
 
