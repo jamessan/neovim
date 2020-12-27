@@ -437,6 +437,27 @@ endif()
 find_package(LIBVTERM 0.1 REQUIRED)
 include_directories(SYSTEM ${LIBVTERM_INCLUDE_DIRS})
 
+list(APPEND CMAKE_REQUIRED_INCLUDES "${LIBVTERM_INCLUDE_DIRS}")
+list(APPEND CMAKE_REQUIRED_LIBRARIES "${LIBVTERM_LIBRARIES}")
+check_c_source_compiles("
+#include <vterm.h>
+
+void
+terminal_output_cb(const char *s, size_t len, void *user)
+{
+}
+
+int
+main(void)
+{
+  VTerm *vt = NULL;
+  vterm_output_set_callback(vt, terminal_output_cb, NULL);
+  return 0;
+}
+" HAVE_VTERM_OUTPUT_CALLBACK)
+list(REMOVE_ITEM CMAKE_REQUIRED_INCLUDES "${LIBVTERM_INCLUDE_DIRS}")
+list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES "${LIBVTERM_LIBRARIES}")
+
 if(WIN32)
   find_package(Winpty 0.4.3 REQUIRED)
   include_directories(SYSTEM ${WINPTY_INCLUDE_DIRS})

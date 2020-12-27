@@ -194,6 +194,9 @@ Terminal *terminal_open(TerminalOptions opts)
   vterm_screen_set_callbacks(rv->vts, &vterm_screen_callbacks, rv);
   vterm_screen_set_damage_merge(rv->vts, VTERM_DAMAGE_SCROLL);
   vterm_screen_reset(rv->vts, 1);
+#ifdef HAVE_VTERM_OUTPUT_CALLBACK
+  vterm_output_set_callback(rv->vt, terminal_output_cb, rv);
+#endif
   // force a initial refresh of the screen to ensure the buffer will always
   // have as many lines as screen rows when refresh_scrollback is called
   rv->invalid_start = 0;
@@ -527,7 +530,7 @@ void terminal_destroy(Terminal *term)
   }
 }
 
-void terminal_send(Terminal *term, char *data, size_t size)
+void terminal_send(Terminal *term, const char *data, size_t size)
 {
   if (term->closed) {
     return;
@@ -549,12 +552,20 @@ void terminal_paste(long count, char_u **y_array, size_t y_size)
   }
 }
 
+#ifdef HAVE_VTERM_OUTPUT_CALLBACK
+static void terminal_output_cb(const char *s, size_t len, void *user)
+{
+  Terminal *term = user;
+  terminal_send(term, s, len);
+}
+#else
 void terminal_flush_output(Terminal *term)
 {
   size_t len = vterm_output_read(term->vt, term->textbuf,
                                  sizeof(term->textbuf));
   terminal_send(term, term->textbuf, len);
 }
+#endif
 
 void terminal_send_key(Terminal *term, int c)
 {
@@ -573,7 +584,9 @@ void terminal_send_key(Terminal *term, int c)
     vterm_keyboard_unichar(term->vt, (uint32_t)c, mod);
   }
 
+#ifndef HAVE_VTERM_OUTPUT_CALLBACK
   terminal_flush_output(term);
+#endif
 }
 
 void terminal_receive(Terminal *term, char *data, size_t len)
