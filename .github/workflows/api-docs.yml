@@ -17,7 +17,6 @@ jobs:
       contents: write
       pull-requests: write
     env:
-      DOC_BRANCH: marvim/api-doc-update
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
@@ -26,19 +25,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install doxygen python3 python3-msgpack luajit
+          sudo apt-get update
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y doxygen python3 python3-msgpack luajit
 
       - name: Setup git config
         run: |
           git config --global user.name 'marvim'
           git config --global user.email 'marvim@users.noreply.github.com'
-          git config --global push.default current
+
+      - run: printf 'DOC_BRANCH=marvim/api-doc-update/%s\n' ${GITHUB_REF#refs/heads/} >> $GITHUB_ENV
 
       - name: Generate docs
         id: docs
         run: |
-          git checkout -b ${DOC_BRANCH}/${GITHUB_REF#refs/heads/}
+          git checkout -b ${DOC_BRANCH}
           python3 scripts/gen_vimdoc.py
           printf '::set-output name=UPDATED_DOCS::%s\n' $([ -z "$(git diff)" ]; echo $?)
 
@@ -47,5 +47,5 @@ jobs:
         run: |
           git add -u
           git commit -m 'docs: regenerate'
-          git push --force https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
-          gh pr create --fill --base ${GITHUB_REF#refs/heads/} || true
+          git push --force https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY} ${DOC_BRANCH}
+          gh pr create --fill --base ${GITHUB_REF#refs/heads/} --head ${DOC_BRANCH} || true
