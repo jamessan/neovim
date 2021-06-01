@@ -2642,7 +2642,7 @@ Dictionary nvim_parse_expression(String expr, String flags, Boolean highlight,
 /// and flushed after each newline. Incomplete lines are kept for writing
 /// later.
 ///
-/// @param message  Message to write
+/// @param messge  Message to write
 /// @param to_err   true: message is an error (uses `emsg` instead of `msg`)
 static void write_msg(String message, bool to_err)
 {
