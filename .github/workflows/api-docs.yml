@@ -43,7 +43,7 @@ jobs:
           printf '::set-output name=UPDATED_DOCS::%s\n' $([ -z "$(git diff)" ]; echo $?)
 
       - name: Automatic PR
-        if: ${{ steps.update-version.outputs.UPDATED_DOCS != 0 }}
+        if: ${{ steps.docs.outputs.UPDATED_DOCS != 0 }}
         run: |
           git add -u
           git commit -m 'docs: regenerate'
