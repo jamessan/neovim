@@ -1,4 +1,4 @@
-Nvim core
+vim core
 =========
 
 Module-specific details are documented at the top of each module (`terminal.c`,
