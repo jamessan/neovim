@@ -59,6 +59,9 @@ EOF
     FUNCTIONALTEST=functionaltest-lua
     DEPS_CMAKE_FLAGS="$DEPS_CMAKE_FLAGS -DUSE_BUNDLED_LUAJIT=OFF"
     ;;
+  qemu)
+    DEPS_CMAKE_FLAGS="$DEPS_CMAKE_FLAGS -DCMAKE_C_COMPILER=$CC"
+    ;;
   *)
     ;;
 esac
