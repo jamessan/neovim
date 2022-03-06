@@ -44,19 +44,19 @@ jobs:
         run: sudo apt install gcc-s390x-linux-gnu
 
       - name: Setup interpreter packages
-        run: qemu-s390x-static ./ci/install.sh
+        run: ./ci/install.sh
 
       - name: Build third-party
-        run: qemu-s390x-static ./ci/before_script.sh
+        run: ./ci/before_script.sh
 
       - name: Build
-        run: qemu-s390x-static ./ci/run_tests.sh build
+        run: ./ci/run_tests.sh build
 
       - name: Unittests
-        run: qemu-s390x-static ./ci/run_tests.sh unittests
+        run: ./ci/run_tests.sh unittests
 
       - name: Functionaltests
-        run: qemu-s390x-static ./ci/run_tests.sh functionaltests
+        run: ./ci/run_tests.sh functionaltests
 
       - name: Oldtests
-        run: qemu-s390x-static ./ci/run_tests.sh oldtests
+        run: ./ci/run_tests.sh oldtests
