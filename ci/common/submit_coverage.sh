@@ -12,11 +12,11 @@ CDPATH='' cd -P -- "$(dirname -- "$0")/../.." || exit
 echo "=== running submit_coverage in $PWD: $* ==="
 "$GCOV" --version
 
-# Download/install codecov-bash and gcovr once.
-codecov_sh="${TEMP:-/tmp}/codecov.bash"
-if ! [ -f "$codecov_sh" ]; then
-  curl --retry 5 --silent --fail -o "$codecov_sh" https://codecov.io/bash
-  chmod +x "$codecov_sh"
+# Download/install codecov-uploader and gcovr once.
+codecov_uploader="${TEMP:-/tmp}/codecov"
+if ! [ -f "$codecov_uploader" ]; then
+  curl --retry 5 --silent --fail -o "$codecov_uploader" https://uploader.codecov.io/latest/linux/codecov
+  chmod +x "$codecov_uploader"
 
   python -m pip install --quiet --user gcovr
 fi
@@ -36,7 +36,7 @@ fi
 # Flags must match pattern ^[\w\,]+$ ("," as separator).
 codecov_flags="$(uname -s),${1}"
 codecov_flags=$(echo "$codecov_flags" | sed 's/[^,_a-zA-Z0-9]/_/g')
-if ! "$codecov_sh" -f coverage.xml -X gcov -X fix -Z -F "${codecov_flags}"; then
+if ! "$codecov_uploader" -f coverage.xml -X gcov -X fix -Z -F "${codecov_flags}"; then
   echo "codecov upload failed."
 fi
 
@@ -49,7 +49,7 @@ if [ "$USE_LUACOV" = 1 ] && [ "$1" != "oldtest" ]; then
   if [ -x "${DEPS_BUILD_DIR}/usr/bin/luacov" ]; then
     "${DEPS_BUILD_DIR}/usr/bin/luacov"
   fi
-  if ! "$codecov_sh" -f luacov.report.out -X gcov -X fix -Z -F "lua,${codecov_flags}"; then
+  if ! "$codecov_uploader" -f luacov.report.out -X gcov -X fix -Z -F "lua,${codecov_flags}"; then
     echo "codecov upload failed."
   fi
   rm luacov.stats.out
