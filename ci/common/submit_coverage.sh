@@ -23,7 +23,7 @@ fi
 
 (
   cd build
-  python -m gcovr --branches --exclude-unreachable-branches --print-summary -j 2 --exclude '.*/auto/.*' --root .. --delete -o ../coverage.xml --xml
+  python -m gcovr --branches --gcov-ignore-parse-errors --exclude-unreachable-branches --print-summary -j 2 --exclude '.*/auto/.*' --root .. --delete -o ../coverage.xml --xml
 )
 
 # Upload to codecov.
