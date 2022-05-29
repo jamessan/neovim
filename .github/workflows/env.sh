@@ -72,6 +72,7 @@ GCOV=gcov
 GCOV_ERROR_FILE=/tmp/libgcov-errors.log
 USE_LUACOV=1
 BUSTED_ARGS=--coverage
+TEST_TIMEOUT=3600
 EOF
     BUILD_FLAGS="$BUILD_FLAGS -DUSE_GCOV=ON"
     ;;

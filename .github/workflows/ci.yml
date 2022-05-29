@@ -146,6 +146,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        timeout: 45
         include:
           - flavor: asan
             cc: clang-13
@@ -180,8 +181,9 @@ jobs:
             cc: gcc
             runner: ubuntu-20.04
             os: linux
+            timeout: 75
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 45
+    timeout-minutes: ${{ matrix.timeout }}
     env:
       CC: ${{ matrix.cc }}
       CI_OS_NAME: ${{ matrix.os }}
