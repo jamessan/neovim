@@ -32,12 +32,11 @@ jobs:
           args: >
             bash -c
             "
-            apt-get -y update &&
-            DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential cmake curl gettext ninja-build locales-all cpanminus git attr libattr1-dev  &&
             useradd --create-home qemuci &&
             chown -R qemuci. . &&
             runuser -u qemuci -- git clone --depth=1 https://github.com/neovim/neovim.git &&
             cd neovim &&
+            ./.github/scripts/install_deps.sh --test &&
             runuser -u qemuci -- git fetch origin ${{ github.ref }}:pr &&
             runuser -u qemuci -- git switch pr &&
             runuser -u qemuci -- cmake -S cmake.deps -B .deps -G Ninja -D USE_BUNDLED_LUAJIT=OFF -D USE_BUNDLED_LUA=ON &&
