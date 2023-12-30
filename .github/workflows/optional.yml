@@ -32,3 +32,19 @@ jobs:
       - uses: docker://multiarch/ubuntu-core:s390x-focal
         with:
           entrypoint: ./.github/scripts/docker-action.sh
+  armhf:
+    if: contains(github.event.pull_request.labels.*.name, 'ci-armhf') || github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        test: [functionaltest, oldtest]
+    env:
+      TARGET: ${{ matrix.test }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - run: docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      - uses: actions/checkout@v4
+      - uses: docker://multiarch/ubuntu-core:armhf-focal
+        with:
+          entrypoint: ./.github/scripts/docker-action.sh
