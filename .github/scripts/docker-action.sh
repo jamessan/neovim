@@ -12,7 +12,7 @@ useradd --create-home qemuci
 # non-root so permissions based tests run correctly
 chown -R qemuci: /github/workspace
 cd /github/workspace
-cirun cmake -S cmake.deps -B .deps -G Ninja -D USE_BUNDLED_LUAJIT=OFF -D USE_BUNDLED_LUA=ON || ( cat .deps/CMakeFiles/CMake*.log; false )
+cirun CC=$(which gcc) cmake -S cmake.deps -B .deps -G Ninja -D USE_BUNDLED_LUAJIT=OFF -D USE_BUNDLED_LUA=ON || ( cat .deps/CMakeFiles/CMake*.log; false )
 cirun cmake --build .deps
-cirun cmake -B build -G Ninja -D PREFER_LUA=ON || ( cat build/CMakeFiles/CMake*.log; false )
+cirun CC=$(which gcc) cmake -B build -G Ninja -D PREFER_LUA=ON || ( cat build/CMakeFiles/CMake*.log; false )
 cirun make ${TARGET}
