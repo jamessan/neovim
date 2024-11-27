@@ -707,6 +707,13 @@ else()
   file(GLOB UNIT_TEST_FIXTURES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/test/unit/fixtures/*.c)
   target_sources(nvim_bin PRIVATE ${UNIT_TEST_FIXTURES})
   target_compile_definitions(nvim_bin PRIVATE UNIT_TESTING)
+  if(MSVC)
+    set_source_files_properties(
+      ${UNIT_TEST_FIXTURES} PROPERTIES COMPILE_OPTIONS "-wd4090;-wd4244;-wd4267")
+  else()
+    set_source_files_properties(
+      ${UNIT_TEST_FIXTURES} PROPERTIES COMPILE_OPTIONS "-Wno-conversion;-Wno-missing-noreturn;-Wno-missing-format-attribute;-Wno-double-promotion;-Wno-strict-prototypes;-Wno-misleading-indentation;-Wno-sign-compare;-Wno-implicit-fallthrough;-Wno-missing-prototypes;-Wno-missing-field-initializers")
+  endif()
 endif()
 
 target_sources(main_lib INTERFACE
