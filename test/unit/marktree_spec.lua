@@ -5,7 +5,7 @@ local ffi = t.ffi
 local eq = t.eq
 local ok = t.ok
 
-local lib = t.cimport('./src/nvim/marktree.h')
+local lib = t.cimport('./src/nvim/marktree.h', './test/unit/fixtures/marktree_test.h')
 
 local function tablelength(tbl)
   local count = 0
